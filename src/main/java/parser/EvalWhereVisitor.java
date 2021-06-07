@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -157,51 +158,49 @@ public class EvalWhereVisitor extends LabeledWhereExprBaseVisitor<Object> {
   @Override
   public Object visitIdin(LabeledWhereExprParser.IdinContext ctx) {
     Object left = vars.get(ctx.ID().getText());
-    boolean result = false;
 
     if (left == null) {
       log.warn("left is null!");
       return false;
     }
 
-    // log.info("left: " + left);
-    for (int i = 0; i < ctx.getChildCount(); i++) {
-      // log.warn("loop #" + i + " expr: " + ctx.expr(i));
-      if (ctx.expr(i) == null) {
-        log.warn("expr is null!");
-        continue;
-      }
-      Object right = visit(ctx.expr(i));
-      if (right == null) {
-        log.warn("right is null!");
-        continue;
-      }
-      // log.info("right: " + right);
-      if (left instanceof BigDecimal) {
-        BigDecimal lhs = (BigDecimal) left;
-        BigDecimal rhs = (BigDecimal) right;
+    List<LabeledWhereExprParser.ExprContext> ctxList = ctx.expr();
+
+    if (left instanceof BigDecimal) {
+      BigDecimal lhs = (BigDecimal) left;
+      boolean result = false;
+      for (LabeledWhereExprParser.ExprContext e : ctxList) {
+        BigDecimal rhs = (BigDecimal) visit(e);
         if (lhs.compareTo(rhs) == 0) {
-          // log.info("1) match");
-          result = true;
-          break;
-        }
-      } else if (left instanceof LocalDate) {
-        LocalDate lhs = (LocalDate) left;
-        LocalDate rhs = (LocalDate) right;
-        if (lhs.isEqual(rhs)) {
-          // log.info("2) match");
-          result = true;
-          break;
-        }
-      } else {
-        if (left.equals(right)) {
-          // log.info("3) match");
           result = true;
           break;
         }
       }
+      return result;
     }
 
+    if (left instanceof LocalDate) {
+      LocalDate lhs = (LocalDate) left;
+      boolean result = false;
+      for (LabeledWhereExprParser.ExprContext e : ctxList) {
+        LocalDate rhs = (LocalDate) visit(e);
+        if (lhs.isEqual(rhs)) {
+          result = true;
+          break;
+        }
+      }
+      return result;
+    }
+
+    String lhs = left.toString();
+    boolean result = false;
+    for (LabeledWhereExprParser.ExprContext e : ctxList) {
+      String rhs = visit(e).toString();
+      if (lhs.equals(rhs)) {
+        result = true;
+        break;
+      }
+    }
     return result;
   }
 

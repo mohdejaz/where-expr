@@ -15,14 +15,14 @@ import java.util.Map;
 public class TestParser {
 
   public static void main(String[] args) throws Exception {
-    CharStream input = CharStreams.fromString("(upd >= '2021-05-30') and (upd < '2021-06-07')");
+    CharStream input = CharStreams.fromString("quad in [\"Done\",\"Decide\"]");
     LabeledWhereExprLexer lexer = new LabeledWhereExprLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     LabeledWhereExprParser parser = new LabeledWhereExprParser(tokens);
     ParseTree tree = parser.start();
     System.out.println("tree: " + tree.toStringTree(parser));
     Map<String, Object> vars = new HashMap<>();
-    vars.put("upd", LocalDate.parse("2021-06-06"));
+    vars.put("quad", "Done");
     EvalWhereVisitor visitor = new EvalWhereVisitor(vars);
     System.out.println(visitor.visit(tree));
   }
