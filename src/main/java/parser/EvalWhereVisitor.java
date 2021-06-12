@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class EvalWhereVisitor extends LabeledWhereExprBaseVisitor<Object> {
@@ -229,7 +231,6 @@ public class EvalWhereVisitor extends LabeledWhereExprBaseVisitor<Object> {
 
     return null;
   }
-
 
   @Override
   public Object visitLike(LabeledWhereExprParser.LikeContext ctx) {

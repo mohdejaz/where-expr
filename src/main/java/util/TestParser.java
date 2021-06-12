@@ -16,14 +16,14 @@ import java.util.Map;
 public class TestParser {
 
   public static void main(String[] args) throws Exception {
-    CharStream input = CharStreams.fromString("abs(atonum(a)) < 10");
+    CharStream input = CharStreams.fromString("abs(atonum(a)) < 10 SORT BY a");
     LabeledWhereExprLexer lexer = new LabeledWhereExprLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     LabeledWhereExprParser parser = new LabeledWhereExprParser(tokens);
     ParseTree tree = parser.start();
     System.out.println("tree: " + tree.toStringTree(parser));
     Map<String, Object> vars = new HashMap<>();
-    vars.put("a", new BigDecimal("-1.23"));
+    vars.put("a", new BigDecimal("1.23"));
     EvalWhereVisitor visitor = new EvalWhereVisitor(vars);
     System.out.println(visitor.visit(tree));
   }
