@@ -16,7 +16,7 @@ import java.util.Map;
 public class TestParser {
 
   public static void main(String[] args) throws Exception {
-    CharStream input = CharStreams.fromString("abs(atonum(a)) < 10 SORT BY a");
+    CharStream input = CharStreams.fromString("abs(atonum(a)) < 10");
     LabeledWhereExprLexer lexer = new LabeledWhereExprLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     LabeledWhereExprParser parser = new LabeledWhereExprParser(tokens);
