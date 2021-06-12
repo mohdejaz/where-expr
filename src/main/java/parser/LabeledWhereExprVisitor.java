@@ -103,19 +103,12 @@ public interface LabeledWhereExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNot(LabeledWhereExprParser.NotContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code atodate}
+	 * Visit a parse tree produced by the {@code func}
 	 * labeled alternative in {@link LabeledWhereExprParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAtodate(LabeledWhereExprParser.AtodateContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code atonum}
-	 * labeled alternative in {@link LabeledWhereExprParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAtonum(LabeledWhereExprParser.AtonumContext ctx);
+	T visitFunc(LabeledWhereExprParser.FuncContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code and}
 	 * labeled alternative in {@link LabeledWhereExprParser#expr}.
@@ -130,13 +123,6 @@ public interface LabeledWhereExprVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRel(LabeledWhereExprParser.RelContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code tos}
-	 * labeled alternative in {@link LabeledWhereExprParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTos(LabeledWhereExprParser.TosContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code id}
 	 * labeled alternative in {@link LabeledWhereExprParser#expr}.

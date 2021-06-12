@@ -77,7 +77,6 @@ public class EvalWhereVisitor extends LabeledWhereExprBaseVisitor<Object> {
     }
 
     if (lhs instanceof BigDecimal || rhs instanceof BigDecimal) {
-      log.info("Inside --");
       BigDecimal left = (BigDecimal) lhs;
       BigDecimal right = (BigDecimal) rhs;
 
@@ -205,6 +204,34 @@ public class EvalWhereVisitor extends LabeledWhereExprBaseVisitor<Object> {
   }
 
   @Override
+  public Object visitFunc(LabeledWhereExprParser.FuncContext ctx) {
+    String func = ctx.ID().getText();
+    List<LabeledWhereExprParser.ExprContext> ctxList = ctx.expr();
+
+    switch (func.toLowerCase()) {
+      case "atodate": {
+        String rhs = visit(ctxList.get(0)).toString();
+        LocalDate date = LocalDate.parse(rhs.toString(), dtf);
+        return date;
+      }
+      case "atonum": {
+        String rhs = visit(ctxList.get(0)).toString();
+        return new BigDecimal(rhs.toString());
+      }
+      case "tos": {
+        return visit(ctxList.get(0)).toString();
+      }
+      case "abs": {
+        String rhs = visit(ctxList.get(0)).toString();
+        return new BigDecimal(rhs.toString()).abs();
+      }
+    }
+
+    return null;
+  }
+
+
+  @Override
   public Object visitLike(LabeledWhereExprParser.LikeContext ctx) {
     String left = (String) visit(ctx.expr(0));
     String right = (String) visit(ctx.expr(1));
@@ -218,27 +245,7 @@ public class EvalWhereVisitor extends LabeledWhereExprBaseVisitor<Object> {
     return LocalDate.parse(ctx.DATE().getText().replace("'", ""), dtf);
   }
 
-  @Override
-  public Object visitAtodate(LabeledWhereExprParser.AtodateContext ctx) {
-    Object str = visit(ctx.expr());
-    // log.info("str:" + str);
-    LocalDate date = LocalDate.parse(str.toString(), dtf);
-    // log.info("date:" + date);
-    return date;
-  }
-
   private String removeQuotes(String str) {
     return str.replaceAll("^\"", "").replaceAll("\"$", "");
-  }
-
-  @Override
-  public Object visitAtonum(LabeledWhereExprParser.AtonumContext ctx) {
-    Object str = visit(ctx.expr());
-    return new BigDecimal(str.toString());
-  }
-
-  @Override
-  public Object visitTos(LabeledWhereExprParser.TosContext ctx) {
-    return visit(ctx.expr()).toString();
   }
 }

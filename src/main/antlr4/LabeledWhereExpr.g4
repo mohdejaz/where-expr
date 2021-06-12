@@ -8,9 +8,7 @@ start
 	;
 
 expr
-	: 'a2d' '(' expr ')'                #atodate
-	| 'a2n' '(' expr ')'                #atonum
-	| 'tos' '(' expr ')'                #tos
+	: ID '(' (expr (',' expr)*)? ')'    #func
 	| '-' expr							#unminus
 	| '!' expr							#not
 	| expr op=('/'|'*') expr			#mult
