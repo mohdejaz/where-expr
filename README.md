@@ -1,6 +1,6 @@
 # where-expr
 
-Embedded java parser/evaluator for where like expression.
+Embedded java parser/evaluator for sql where like expression.
 
 Here's how to use it ...
 
